@@ -1551,14 +1551,19 @@ const productCard = `
     <div class="p-4">
         <h3 class="font-semibold text-gray-800">${product.name}</h3>
         <p class="text-xl font-bold">₹${product.price}</p>
-        <button class="add-to-cart-btn mt-4 w-full bg-yellow-400 py-2 rounded-lg"
-                data-id="${productId}" data-name="${product.name}" data-price="${product.price}">
-            Add to Cart
-        </button>
+        
+        <!-- ADD data-image="${product.imageUrl}" BELOW -->
+        <button class="add-to-cart-btn mt-4 w-full bg-yellow-400 py-2 rounded-lg hover:bg-yellow-500 transition"
+                data-id="${productId}" 
+                data-name="${product.name}" 
+                data-price="${product.price}"
+                data-image="${product.imageUrl}"> 
+            ${product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
+</button>
+        
         ${ownerControls} 
     </div>
 </div>`;
-
 
 
                 // Updated logic to separate products
