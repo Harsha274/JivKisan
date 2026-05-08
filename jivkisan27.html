@@ -1233,77 +1233,63 @@
 
     }
 
-
-
-    // --- Auth State Change ---
-
+// --- Auth State Change ---
     auth.onAuthStateChanged(async (user) => {
-
       const adminEmail = "harshask274@gmail.com";
-
+      
       if (user) {
-
         profileArea.style.display = "flex";
-
         showAuthModalBtn.style.display = "none";
-
         sellProductBtn.classList.remove('hidden');
-
         myCartBtn.classList.remove('hidden');
-
         profileName.textContent = user.displayName || user.email;
 
+        // Admin Panel Visibility
         if (user.email === adminEmail) {
-
           adminPanelBtn.classList.remove('hidden');
-
         } else {
-
           adminPanelBtn.classList.add('hidden');
-
         }
 
+        // --- NEW: Check if user is already a supplier/applicant ---
+        db.collection('supplierApplications')
+          .where('submittedBy', '==', user.uid)
+          .limit(1)
+          .get()
+          .then(snapshot => {
+            if (!snapshot.empty) {
+              showSupplierModalBtn.classList.add('hidden'); // Hide button if already applied
+            } else {
+              showSupplierModalBtn.classList.remove('hidden');
+            }
+          })
+          .catch(err => console.error("Error checking supplier status:", err));
+
       } else {
-
+        // Logged out state
         profileArea.style.display = "none";
-
         showAuthModalBtn.style.display = "block";
-
         sellProductBtn.classList.add('hidden');
-
         myCartBtn.classList.add('hidden');
-
         adminPanelBtn.classList.add('hidden');
-
+        showSupplierModalBtn.classList.add('hidden'); // Optional: hide if logged out
       }
 
+      // Check Raita Application Status
       try {
-
-          if (user) {
-
-              const appSnapshot = await db.collection("raitaApplications").where("userId", "==", user.uid).limit(1).get();
-
-              updateRaitaStatusUI(appSnapshot.empty ? 'not_applied' : appSnapshot.docs[0].data().status);
-
-          } else {
-
-              updateRaitaStatusUI('logged_out');
-
-          }
-
+        if (user) {
+          const appSnapshot = await db.collection("raitaApplications").where("userId", "==", user.uid).limit(1).get();
+          updateRaitaStatusUI(appSnapshot.empty ? 'not_applied' : appSnapshot.docs[0].data().status);
+        } else {
+          updateRaitaStatusUI('logged_out');
+        }
       } catch (e) {
-
-          console.error("Error checking Raita status: ", e);
-
-          updateRaitaStatusUI('error', "Error checking your application status.");
-
+        console.error("Error checking Raita status: ", e);
+        updateRaitaStatusUI('error', "Error checking your application status.");
       }
 
       router();
-
     });
-
-
 
     // --- Convert file to Base64 ---
 
@@ -1770,104 +1756,72 @@ const productCard = `
 
     // --- Supplier Form Submission ---
 
-    supplierForm.onsubmit = async (e) => {
+supplierForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) {
+        supplierMessage.textContent = "You must be logged in to submit an application.";
+        supplierMessage.className = "text-red-600";
+        return;
+    }
 
-        e.preventDefault();
+    const submitButton = supplierForm.querySelector('button[type="submit"]');
+    const originalButtonHTML = submitButton.innerHTML;
 
-        const user = auth.currentUser;
+    try {
+        // --- NEW: Check for existing application ---
+        supplierMessage.textContent = "Checking for previous applications...";
+        supplierMessage.className = "text-blue-600";
+        
+        const existingApp = await db.collection('supplierApplications')
+            .where('submittedBy', '==', user.uid)
+            .limit(1)
+            .get();
 
-        if (!user) {
-
-            supplierMessage.textContent = "You must be logged in to submit an application.";
-
-            supplierMessage.className = "text-red-600";
-
-            return;
-
+        if (!existingApp.empty) {
+            supplierMessage.textContent = "You have already submitted an application. Please wait for review.";
+            supplierMessage.className = "text-orange-600 font-bold";
+            return; // STOP HERE
         }
+        // ------------------------------------------
 
         const certFile = document.getElementById('supplierCertificate').files[0];
-
         if (!certFile) {
-
             supplierMessage.textContent = "Please upload your organic certificate.";
-
             supplierMessage.className = "text-red-600";
-
             return;
-
         }
-
-
-
-        const submitButton = supplierForm.querySelector('button[type="submit"]');
-
-        const originalButtonHTML = submitButton.innerHTML;
 
         submitButton.disabled = true;
+        submitButton.innerHTML = `<span class="animate-spin ..."></span> Processing...`;
 
-        submitButton.innerHTML = `<span class="animate-spin inline-block w-5 h-5 border-2 border-white rounded-full border-t-transparent"></span><span class="ml-3">Submitting...</span>`;
+        const certificateB64 = await fileToBase64(certFile);
+        const appData = {
+            companyName: document.getElementById('supplierCompanyName').value,
+            contactName: document.getElementById('supplierContactName').value,
+            email: document.getElementById('supplierEmail').value,
+            phone: document.getElementById('supplierPhone').value,
+            website: document.getElementById('supplierWebsite').value,
+            productDetails: document.getElementById('supplierProductDetails').value,
+            certificate: certificateB64,
+            status: 'pending',
+            submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            submittedBy: user.uid, // This is what we check against
+        };
 
-        supplierMessage.textContent = "Processing certificate...";
+        await db.collection('supplierApplications').add(appData);
+        supplierMessage.textContent = "Application submitted successfully!";
+        supplierMessage.className = "text-green-600";
+        setTimeout(() => supplierModal.classList.add('hidden'), 3000);
 
-        supplierMessage.className = "text-blue-600";
-
-
-
-        try {
-
-            const certificateB64 = await fileToBase64(certFile);
-
-            const appData = {
-
-                companyName: document.getElementById('supplierCompanyName').value,
-
-                contactName: document.getElementById('supplierContactName').value,
-
-                email: document.getElementById('supplierEmail').value,
-
-                phone: document.getElementById('supplierPhone').value,
-
-                website: document.getElementById('supplierWebsite').value,
-
-                productDetails: document.getElementById('supplierProductDetails').value,
-
-                certificate: certificateB64,
-
-                status: 'pending',
-
-                submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
-
-                submittedBy: user.uid,
-
-            };
-
-            await db.collection('supplierApplications').add(appData);
-
-            supplierMessage.textContent = "Application submitted successfully! We will review it shortly.";
-
-            supplierMessage.className = "text-green-600";
-
-            setTimeout(() => supplierModal.classList.add('hidden'), 3000);
-
-        } catch (error) {
-
-            supplierMessage.textContent = `Error: ${error.message}`;
-
-            supplierMessage.className = "text-red-600";
-
-            console.error("Supplier application error:", error);
-
-        } finally {
-
-            submitButton.disabled = false;
-
-            submitButton.innerHTML = originalButtonHTML;
-
-        }
-
-    };
-
+    } catch (error) {
+        supplierMessage.textContent = `Error: ${error.message}`;
+        supplierMessage.className = "text-red-600";
+    } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalButtonHTML;
+    }
+};
 
 
     // --- Raita Discussion Functions ---
