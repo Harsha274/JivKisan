@@ -1243,18 +1243,25 @@
         }
 
         // --- NEW: Check if user is already a supplier/applicant ---
-        db.collection('supplierApplications')
-          .where('submittedBy', '==', user.uid)
-          .limit(1)
-          .get()
-          .then(snapshot => {
-            if (!snapshot.empty) {
-              showSupplierModalBtn.classList.add('hidden'); // Hide button if already applied
-            } else {
-              showSupplierModalBtn.classList.remove('hidden');
-            }
-          })
-          .catch(err => console.error("Error checking supplier status:", err));
+        // Locate this block inside auth.onAuthStateChanged
+db.collection('supplierApplications')
+  .where('submittedBy', '==', user.uid)
+  .limit(1)
+  .get()
+  .then(snapshot => {
+    if (!snapshot.empty) {
+      const appData = snapshot.docs[0].data();
+      // Only hide the button if they are already approved or still waiting
+      if (appData.status === 'approved' || appData.status === 'pending') {
+        showSupplierModalBtn.classList.add('hidden');
+      } else {
+        // Show button if rejected so they can try again
+        showSupplierModalBtn.classList.remove('hidden');
+      }
+    } else {
+      showSupplierModalBtn.classList.remove('hidden');
+    }
+  });
 
       } else {
         // Logged out state
@@ -1829,18 +1836,13 @@ document.getElementById('searchOrganicProducts').addEventListener('input', apply
 supplierForm.onsubmit = async (e) => {
     e.preventDefault();
     const user = auth.currentUser;
-    if (!user) {
-        supplierMessage.textContent = "You must be logged in to submit an application.";
-        supplierMessage.className = "text-red-600";
-        return;
-    }
+    if (!user) return;
 
     const submitButton = supplierForm.querySelector('button[type="submit"]');
     const originalButtonHTML = submitButton.innerHTML;
 
     try {
-        // --- NEW: Check for existing application ---
-        supplierMessage.textContent = "Checking for previous applications...";
+        supplierMessage.textContent = "Checking application status...";
         supplierMessage.className = "text-blue-600";
         
         const existingApp = await db.collection('supplierApplications')
@@ -1848,24 +1850,26 @@ supplierForm.onsubmit = async (e) => {
             .limit(1)
             .get();
 
+        // Check if there is an active application
         if (!existingApp.empty) {
-            supplierMessage.textContent = "You have already submitted an application. Please wait for review.";
-            supplierMessage.className = "text-orange-600 font-bold";
-            return; // STOP HERE
-        }
-        // ------------------------------------------
-
-        const certFile = document.getElementById('supplierCertificate').files[0];
-        if (!certFile) {
-            supplierMessage.textContent = "Please upload your organic certificate.";
-            supplierMessage.className = "text-red-600";
-            return;
+            const currentStatus = existingApp.docs[0].data().status;
+            if (currentStatus === 'pending') {
+                supplierMessage.textContent = "You already have a pending application.";
+                supplierMessage.className = "text-orange-600 font-bold";
+                return;
+            } else if (currentStatus === 'approved') {
+                supplierMessage.textContent = "You are already an approved supplier.";
+                supplierMessage.className = "text-green-600 font-bold";
+                return;
+            }
         }
 
         submitButton.disabled = true;
-        submitButton.innerHTML = `<span class="animate-spin ..."></span> Processing...`;
+        submitButton.innerHTML = `Processing...`;
 
+        const certFile = document.getElementById('supplierCertificate').files[0];
         const certificateB64 = await fileToBase64(certFile);
+
         const appData = {
             companyName: document.getElementById('supplierCompanyName').value,
             contactName: document.getElementById('supplierContactName').value,
@@ -1874,13 +1878,20 @@ supplierForm.onsubmit = async (e) => {
             website: document.getElementById('supplierWebsite').value,
             productDetails: document.getElementById('supplierProductDetails').value,
             certificate: certificateB64,
-            status: 'pending',
+            status: 'pending', // Reset status to pending on re-submission
             submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            submittedBy: user.uid, // This is what we check against
+            submittedBy: user.uid,
         };
 
-        await db.collection('supplierApplications').add(appData);
-        supplierMessage.textContent = "Application submitted successfully!";
+        if (!existingApp.empty) {
+            // Update the existing document if it was previously rejected
+            await db.collection('supplierApplications').doc(existingApp.docs[0].id).set(appData);
+        } else {
+            // Create new if it's the first time
+            await db.collection('supplierApplications').add(appData);
+        }
+
+        supplierMessage.textContent = "Application re-submitted successfully!";
         supplierMessage.className = "text-green-600";
         setTimeout(() => supplierModal.classList.add('hidden'), 3000);
 
@@ -1892,7 +1903,6 @@ supplierForm.onsubmit = async (e) => {
         submitButton.innerHTML = originalButtonHTML;
     }
 };
-
 
     // --- Raita Discussion Functions ---
 
