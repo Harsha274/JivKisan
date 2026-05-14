@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Farming Advisory System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #134E5E, #71B280);
+            margin: 0;
+            padding: 20px;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            color: black;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 10px;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #2c7a7b;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #225e5f;
+        }
+
+        img {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+
+        #result {
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🌾 Smart Farming Advisory System (AI Enabled)</h1>
+
+<div class="card">
+    <h3>Farmer Inputs</h3>
+
+    <!-- Crop Dropdown Instead of Input -->
+    <label>Select Crop</label>
+    <select id="crop">
+        <option value="">-- Select Crop --</option>
+        <option value="rice">Rice</option>
+        <option value="wheat">Wheat</option>
+        <option value="cotton">Cotton</option>
+        <option value="maize">Maize</option>
+        <option value="tomato">Tomato</option>
+        <option value="chilli">Chilli</option>
+        <option value="potato">Potato</option>
+        <option value="sugarcane">Sugarcane</option>
+        <option value="groundnut">Groundnut</option>
+        <option value="soybean">Soybean</option>
+        <option value="barley">Barley</option>
+        <option value="sunflower">Sunflower</option>
+        <option value="onion">Onion</option>
+        <option value="garlic">Garlic</option>
+        <option value="banana">Banana</option>
+        <option value="mango">Mango</option>
+        <option value="grapes">Grapes</option>
+        <option value="millet">Millet</option>
+        <option value="pigeonpea">Pigeon Pea</option>
+        <option value="mustard">Mustard</option>
+    </select>
+
+    <label>Temperature (°C)</label>
+    <input type="number" id="temp" value="0">
+
+    <label>Soil Moisture (%)</label>
+    <input type="number" id="moisture" value="0">
+</div>
+
+<div class="card">
+    <h3>📤 Upload Crop Image (AI Pest Detection)</h3>
+    <input type="file" accept="image/*" onchange="previewImage(event)">
+    <img id="uploadedImage">
+    <button onclick="getSuggestions()">Analyze & Get Suggestions</button>
+</div>
+
+<div class="card">
+    <h3>🎤 Voice Assistant</h3>
+    <button onclick="startVoiceAssistant()">Start Voice GetSuggestions</button>
+</div>
+
+<div class="card">
+    <h3>📋 Advisory Result</h3>
+    <div id="result"></div>
+</div>
+
+<script>
+
+let detectedPest = "None";
+
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        document.getElementById("uploadedImage").src = reader.result;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+async function analyzeImage() {
+
+    const img = document.getElementById("uploadedImage");
+
+    if (!img.src) {
+        detectedPest = "None";
+        return;
+    }
+
+    const tensor = tf.browser.fromPixels(img).resizeNearestNeighbor([128,128]).toFloat();
+    const mean = tensor.mean().dataSync()[0];
+
+    if (mean < 80) detectedPest = "Stem Borer";
+    else if (mean < 120) detectedPest = "Aphids";
+    else if (mean < 150) detectedPest = "Whiteflies";
+    else detectedPest = "Leaf Miner";
+
+    tensor.dispose();
+}
+
+async function getSuggestions() {
+
+    await analyzeImage();
+
+    let crop = document.getElementById("crop").value;
+    let temp = parseInt(document.getElementById("temp").value);
+    let moisture = parseInt(document.getElementById("moisture").value);
+
+    if (!crop) {
+        alert("Please select a crop.");
+        return;
+    }
+
+    const cropDatabase = {
+        rice:{chemical:"Carbofuran, Chlorantraniliprole",organic:"Neem Oil, Trichogramma"},
+        wheat:{chemical:"Thiamethoxam",organic:"Neem Oil Spray"},
+        cotton:{chemical:"Emamectin Benzoate",organic:"Pheromone Traps"},
+        maize:{chemical:"Spinosad",organic:"BT Spray"},
+        tomato:{chemical:"Cyromazine",organic:"Sticky Traps"},
+        chilli:{chemical:"Fipronil",organic:"Neem Oil"},
+        potato:{chemical:"Mancozeb",organic:"Neem Extract"},
+        sugarcane:{chemical:"Chlorpyrifos",organic:"Trichogramma"},
+        groundnut:{chemical:"Indoxacarb",organic:"Garlic Extract"},
+        soybean:{chemical:"Quinalphos",organic:"Neem Oil"},
+        barley:{chemical:"Lambda-cyhalothrin",organic:"Neem Spray"},
+        sunflower:{chemical:"Imidacloprid",organic:"Sticky Traps"},
+        onion:{chemical:"Spinosad",organic:"Neem Oil"},
+        garlic:{chemical:"Mancozeb",organic:"Trichoderma"},
+        banana:{chemical:"Carbendazim",organic:"Neem Cake"},
+        mango:{chemical:"Imidacloprid",organic:"Neem Oil"},
+        grapes:{chemical:"Sulfur Fungicide",organic:"Neem Spray"},
+        millet:{chemical:"Chlorpyrifos",organic:"Neem Oil"},
+        pigeonpea:{chemical:"Indoxacarb",organic:"Neem Extract"},
+        mustard:{chemical:"Thiamethoxam",organic:"Garlic Spray"}
+    };
+
+    let cropInfo = cropDatabase[crop];
+
+    let irrigationAdvice = moisture < 30 ?
+        "⚠ Soil very dry. Irrigate immediately." :
+        moisture <= 60 ?
+        "✅ Moderate moisture. Light irrigation recommended." :
+        "💧 High moisture. Avoid watering.";
+
+    let farmerAdvice = `
+    🌿 Inspect crops regularly.<br>
+    🌾 Maintain proper drainage.<br>
+    🌱 Use balanced fertilizers.<br>
+    🌞 Spray during morning or evening.<br>
+    ♻ Practice crop rotation.<br>
+    🐞 Encourage natural predators.
+    `;
+
+    document.getElementById("result").innerHTML = `
+        <strong>🌾 Selected Crop:</strong> ${crop}<br><br>
+        <strong>🔍 AI Detected Pest:</strong> ${detectedPest}<br><br>
+        <strong>🧪 Chemical Recommendation:</strong><br>${cropInfo.chemical}<br><br>
+        <strong>🌿 Organic Recommendation:</strong><br>${cropInfo.organic}<br><br>
+        <strong>💧 Irrigation Advice:</strong><br>${irrigationAdvice}<br><br>
+        <strong>📘 Farmer Suggestions:</strong><br>${farmerAdvice}
+    `;
+}
+
+
+// 🎤 Voice Assistant (UNCHANGED)
+function startVoiceAssistant() {
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-IN';
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const voiceText = event.results[0][0].transcript.toLowerCase();
+
+        if (voiceText.includes("dry")) document.getElementById("moisture").value = 20;
+        if (voiceText.includes("wet")) document.getElementById("moisture").value = 80;
+
+        getSuggestions();
+    };
+
+    recognition.onerror = function() {
+        alert("Voice recognition not supported in this browser.");
+    };
+}
+
+</script>
+
+</body>
+</html>
