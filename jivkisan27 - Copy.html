@@ -1,0 +1,1255 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>JivKisan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+    }
+    .overflow-table {
+      max-height: 480px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header class="bg-[#386641] text-yellow-400 shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto flex items-center justify-between px-4 py-4">
+      <div class="flex items-center gap-4">
+        <img src="images/logo.png" alt="JivKisan Logo" class="h-12 w-12 bg-white rounded p-1" />
+        <div>
+          <h1 class="text-2xl font-bold tracking-wider">JIVKISAN</h1>
+          <p class="text-xs font-medium">By the farmers, To the farmers, For the farmers</p>
+        </div>
+      </div>
+      
+      <nav class="hidden md:grid grid-cols-4 gap-x-6 gap-y-2 items-center text-center">
+        <a href="#home" class="nav-link text-yellow-100 hover:text-white font-bold transition py-1 bg-[#2e5335] rounded hover:bg-[#25422a]">Home</a>
+        <a href="#all_products" class="nav-link text-yellow-100 hover:text-white font-bold transition py-1 bg-[#2e5335] rounded hover:bg-[#25422a]">All Products</a>
+        <a href="#organic_products" class="nav-link text-yellow-100 hover:text-white font-bold transition py-1 bg-[#2e5335] rounded hover:bg-[#25422a]">Organic Only</a>
+        <a href="#organic_raita" class="nav-link text-yellow-100 hover:text-white font-bold transition py-1 bg-[#2e5335] rounded hover:bg-[#25422a]">Organic Raita</a>
+        <a href="#suppliers" class="nav-link text-yellow-100 hover:text-white font-bold transition py-1 bg-[#2e5335] rounded hover:bg-[#25422a]">Our Suppliers</a>
+        <a href="ai_advisory.html" target="_blank" class="nav-link text-yellow-100 hover:text-white font-bold transition py-1 bg-[#2e5335] rounded hover:bg-[#25422a]">AI Advisory</a>
+        <a href="#fpo_hub" class="nav-link text-yellow-100 hover:text-white font-bold transition py-1 bg-[#2e5335] rounded hover:bg-[#25422a]">FPO Collective</a>
+        <a href="#p2p_resources" class="nav-link text-yellow-100 hover:text-white font-bold transition py-1 bg-[#2e5335] rounded hover:bg-[#25422a]">Water Grid</a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <button id="sellProductBtn" class="hidden bg-yellow-400 text-green-900 px-4 py-2 rounded hover:bg-yellow-300 font-bold text-sm">Sell Product</button>
+        <button id="myCartBtn" class="hidden bg-yellow-400 text-green-900 px-4 py-2 rounded hover:bg-yellow-300 font-bold text-sm flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+            My Cart
+        </button>
+        <div class="relative group" id="profileArea" style="display: none">
+          <button id="profileDropdownBtn" class="focus:outline-none flex items-center gap-1">
+            <span><img id="profileAvatar" src="images/profile.png" alt="Profile" class="h-10 w-10 rounded-full border-2 border-yellow-400 object-cover"/></span>
+            <span id="profileName" class="text-yellow-100 font-semibold ml-2"></span>
+            <svg class="h-5 w-5 text-yellow-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 20 20"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7l3-3 3 3m0 6l-3 3-3-3" /></svg>
+          </button>
+          <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 invisible group-hover:visible transition duration-200 z-50">
+            <a href="#my_orders" class="block px-4 py-2 hover:bg-green-50 text-gray-800">My Orders</a>
+            <a href="#edit_profile" class="block px-4 py-2 hover:bg-green-50 text-gray-800">Edit Profile</a>
+            <button id="logoutBtn" class="block w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Logout</button>
+          </div>
+        </div>
+        <button id="showAuthModalBtn" class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 font-bold" style="display: block">
+          Login / Register
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto py-8 px-4">
+    <div id="homePage">
+      <h2 class="text-3xl font-bold text-green-800 mb-4">Welcome to JivKisan!</h2>
+      <p class="mb-8">Discover fresh, organic produce, market prices, and your personalized dashboard here.</p>
+      
+      <section class="mb-10 bg-white p-6 rounded-lg shadow border border-gray-200">
+        <h3 class="text-2xl font-bold text-green-950 mb-4">Organic Farmers (ಪ್ರಗತಿಪರ ರೈತ)</h3>
+        <div class="flex justify-center">
+          <iframe 
+            id="youtubeFrame"
+            width="300" 
+            height="200" 
+            src="https://www.youtube.com/embed/YbxW6JfUuTY" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h3 class="text-2xl font-bold text-green-950 mb-4">Live Karnataka Mandi Prices</h3>
+        <div id="liveMarketLoader" class="mb-4 text-sm text-gray-500">Loading latest prices...</div>
+        <div class="rounded-lg shadow overflow-x-auto overflow-table bg-white">
+          <table class="min-w-full divide-y divide-gray-200" id="liveMandiTable">
+            <thead class="bg-gray-100 sticky top-0">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Crop</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Date</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Avg Min (₹)</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Avg Max (₹)</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Avg Modal (₹)</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Mandis</th>
+              </tr>
+            </thead>
+            <tbody id="mandiTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <div id="allProductsPage" class="hidden">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <h2 class="text-3xl font-bold text-green-800">All Products</h2>
+            <input type="text" id="searchAllProducts" placeholder="Search products..." 
+                   class="w-full md:w-64 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+        </div>
+        <div id="all-products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    </div>
+
+    <div id="organicProductsPage" class="hidden">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <h2 class="text-3xl font-bold text-green-800">Organic Products</h2>
+            <input type="text" id="searchOrganicProducts" placeholder="Search organic..." 
+                   class="w-full md:w-64 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+        </div>
+        <div id="organic-products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    </div>
+
+    <div id="fpoHubPage" class="hidden">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <div>
+                <h2 class="text-3xl font-bold text-green-800">FPO Collective Contracts Hub</h2>
+                <p class="text-sm text-gray-600 mt-1">Lock in secure pricing commitments before harvest to hedge against sudden domestic crashes.</p>
+            </div>
+            <button id="createContractBtn" class="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 transition shrink-0">Create Forward Contract</button>
+        </div>
+        <div id="activeContractsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <div id="resourceSharingPage" class="hidden">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <div>
+                <h2 class="text-3xl font-bold text-green-800">P2P Water & Infrastructure Grid</h2>
+                <p class="text-sm text-gray-600 mt-1">Combat field irrigation deficits by leasing shared pumping schedules or assets locally.</p>
+            </div>
+            <button id="listResourceBtn" class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition shrink-0">List Resource Capacity</button>
+        </div>
+        <div id="sharedResourcesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <div id="myCartPage" class="hidden">
+      <h2 class="text-3xl font-bold text-green-800 mb-6">My Shopping Cart</h2>
+      <div class="flex flex-col lg:flex-row gap-8">
+        <div id="cartItemsContainer" class="w-full lg:w-2/3 space-y-4">
+          <p class="text-center text-gray-500">Your cart is empty.</p>
+        </div>
+        <div id="cartSummary" class="w-full lg:w-1/3">
+            <div class="bg-white p-6 rounded-lg shadow-md border sticky top-24">
+                <h3 class="text-xl font-semibold mb-4">Order Summary</h3>
+                <div class="flex justify-between mb-2 text-gray-600">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal">₹0.00</span>
+                </div>
+                <div class="flex justify-between mb-4 text-gray-600">
+                    <span>Shipping</span>
+                    <span>FREE</span>
+                </div>
+                <hr class="my-4">
+                <div class="flex justify-between font-bold text-lg mb-6">
+                    <span>Total</span>
+                    <span id="cartTotal">₹0.00</span>
+                </div>
+                <button id="checkoutBtn" class="w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition disabled:bg-gray-400" disabled>Place Order</button>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="myOrdersPage" class="hidden">
+      <h2 class="text-3xl font-bold text-green-800 mb-6">My Orders & Transactions</h2>
+      <div id="ordersContainer" class="space-y-6">
+          <p class="text-center text-gray-500">You have not placed any orders yet.</p>
+      </div>
+    </div>
+
+    <div id="organicRaitaPage" class="hidden">
+      <div id="raitaContent" class="bg-white p-6 rounded-lg shadow-md max-w-7xl mx-auto">
+        <div id="raitaNotApprovedContent" class="hidden text-center">
+          <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">Organic Raita Membership</h2>
+          <p id="raitaStatus" class="mb-6 text-gray-700 text-lg"></p>
+          <button id="applyRaitaBtn" class="hidden bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 font-semibold transition">Apply for Member of Raita</button>
+        </div>
+        <div id="raitaApprovedContent" class="hidden text-left">
+          <h2 class="text-3xl font-bold text-green-800 mb-2 text-center">JivKisan Raita Network</h2>
+          <p class="text-center text-green-600 font-semibold mb-1">ನೀವು ಅನುಮೋದಿತ ಸದಸ್ಯರು / You are an Approved Member</p>
+          <p class="text-gray-500 text-center mb-8">Private Blockchain Hub for Approved Farmers</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+              <h4 class="font-bold text-xl mb-4 text-green-800">Group Discussion & Meetings</h4>
+              <div id="discussionMessages" class="h-64 overflow-y-auto mb-4 p-4 bg-gray-50 rounded-lg border space-y-4">
+                <p class="text-gray-500 text-center">Loading messages...</p>
+              </div>
+              <form id="discussionForm">
+                <label for="newMessage" class="sr-only">New Message</label>
+                <textarea id="newMessage" required class="w-full border rounded-lg px-4 py-2" placeholder="Type your message, suggestion, or meeting plan..."></textarea>
+                <button type="submit" class="mt-3 w-full bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition">Post Message</button>
+              </form>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+              <h4 class="font-bold text-xl mb-4 text-green-800">Crop Price Prediction</h4>
+              <div class="space-y-4">
+                  <label for="cropSelect" class="block font-medium">Select a Crop:</label>
+                  <select id="cropSelect" class="w-full p-2 border rounded-lg bg-white"></select>
+                  <button id="predictPriceBtn" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition">Predict Price</button>
+                  <div id="predictionResult" class="mt-4 p-4 bg-blue-50 rounded-lg text-center h-24 flex items-center justify-center">
+                      <p class="text-gray-500">Prediction will be displayed here.</p>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="suppliersPage" class="hidden">
+        <div class="flex justify-between items-center mb-4">
+             <h2 class="text-3xl font-bold text-green-800">Our Trusted Sourcing Partners</h2>
+             <button id="showSupplierModalBtn" class="bg-green-600 text-white font-semibold px-5 py-3 rounded-lg hover:bg-green-700 transition shadow-md">Become a Supplier</button>
+        </div>
+        <p class="mb-8 text-gray-600 max-w-4xl">
+            At JivKisan, we are committed to providing the highest quality organic products. We partner with a mix of government institutions, established private companies, and farmer collectives to source authentic and certified organic inputs for the farmers of Karnataka.
+        </p>
+        <hr class="my-8">
+        <h3 class="text-2xl font-bold text-green-950 mb-6">Government & University Institutions</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                <h4 class="font-bold text-xl text-green-800 mb-2">University of Agricultural Sciences (UAS)</h4>
+                <p class="text-sm font-medium text-gray-500 mb-3">Bangalore & Dharwad</p>
+                <p class="text-gray-700">UAS is a premier research institution. Their microbiology and soil science departments produce scientifically validated, high-quality bio-fertilizers, vermicompost, and microbial cultures that are highly effective and sold at fair prices.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                <h4 class="font-bold text-xl text-green-800 mb-2">Indian Institute of Horticultural Research (IIHR)</h4>
+                 <p class="text-sm font-medium text-gray-500 mb-3">Bengaluru</p>
+                <p class="text-gray-700">As a leading ICAR institute, IIHR develops and sells specialized organic inputs for horticultural crops, including their well-known Arka Microbial Consortium, bio-pesticides, and other reliable solutions for farming.</p>
+            </div>
+        </div>
+        <hr class="my-8">
+        <h3 class="text-2xl font-bold text-green-950 mb-6">Established Private Companies</h3>
+        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6">
+            <h4 class="font-bold text-xl text-green-800 mb-2">Siddi Bio (Siddalingeshwara Industries)</h4>
+            <p class="text-gray-700">A local Karnataka-based company specializing in authentic, traditional organic inputs like Jeevamrutha and manure extracts that promote natural farming.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                <h4 class="font-bold text-xl text-green-800 mb-2">T.Stanes and Company Ltd.</h4>
+                <p class="text-gray-700">A pioneering company with a long-standing reputation for quality. They offer a vast range of certified organic products, including bio-fertilizers and pest control solutions.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                <h4 class="font-bold text-xl text-green-800 mb-2">Camson Bio Technologies Ltd.</h4>
+                <p class="text-gray-700">Based in Bengaluru, this research-focused company specializes in microbial agricultural products, offering innovative and effective organic solutions for farmers in Karnataka.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                <h4 class="font-bold text-xl text-green-800 mb-2">Prathibha Biotech</h4>
+                <p class="text-gray-700">A key supplier that manufactures a wide variety of organic inputs, including manures, bio-fertilizers, and plant growth promoters similar to Vegadooth.</p>
+            </div>
+        </div>
+        <hr class="my-8">
+        <h3 class="text-2xl font-bold text-green-950 mb-6">Approved Private Suppliers</h3>
+        <div id="approvedSuppliersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <p id="approvedSuppliersMsg">Loading approved suppliers...</p>
+        </div>
+        <hr class="my-8">
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 p-6 rounded-md shadow-md">
+            <h4 class="font-bold text-lg mb-2">Our Commitment to Authenticity</h4>
+            <p>We ensure that all our partners adhere to strict quality standards. We prioritize suppliers who are certified under the **National Programme for Organic Production (NPOP)** and use the **Jaivik Bharat** logo, which is the national standard for authentic organic products in India.</p>
+        </div>
+    </div>
+
+    <div id="adminPanelPage" class="hidden">
+      <h2 class="text-3xl font-bold text-green-800 mb-6">Admin Panel</h2>
+      <div class="space-y-12">
+        <div>
+          <h3 class="text-2xl font-semibold text-green-900 mb-4">All Customer Orders (Transaction History)</h3>
+          <div class="rounded-lg shadow overflow-x-auto bg-white">
+            <table class="min-w-full divide-y divide-gray-200" id="allOrdersTable">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Order ID</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Date</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Customer</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Total (₹)</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Status</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Action</th>
+                </tr>
+              </thead>
+              <tbody id="allOrdersTableBody" class="bg-white divide-y divide-gray-200 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-2xl font-semibold text-green-900 mb-4">Supplier Applications</h3>
+          <div class="rounded-lg shadow overflow-x-auto bg-white">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Company</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Contact</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Products</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Certificate</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Status</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Action</th>
+                </tr>
+              </thead>
+              <tbody id="supplierAdminTableBody" class="bg-white divide-y divide-gray-200 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-2xl font-semibold text-green-900 mb-4">Raita Applications</h3>
+          <div class="rounded-lg shadow overflow-x-auto bg-white">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Date</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Applicant</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Details & Answers</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Images</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Status</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody" class="bg-white divide-y divide-gray-200 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <a href="#admin" id="adminPanelBtn" class="hidden fixed bottom-6 right-6 bg-green-800 text-white p-4 rounded-full shadow-lg hover:bg-green-900 transition z-40" title="Admin Panel">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+  </a>
+
+  <div id="addProductModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+      <div class="bg-white w-full max-w-lg p-8 rounded-xl shadow-xl relative max-h-[90vh] overflow-y-auto">
+          <button id="closeAddProductModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+          <h3 class="text-xl font-bold mb-6">List Your Product for Sale</h3>
+          <form id="addProductForm" class="space-y-4">
+              <div>
+                  <label for="productName" class="block font-medium mb-1">Product Name</label>
+                  <input type="text" id="productName" placeholder="e.g., Organic Turmeric Powder" required class="w-full border rounded px-4 py-2" />
+              </div>
+              <div>
+                  <label for="productDescription" class="block font-medium mb-1">Description</label>
+                  <textarea id="productDescription" placeholder="Describe your product, its quality, and quantity" required class="w-full border rounded px-4 py-2"></textarea>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label for="productPrice" class="block font-medium mb-1">Price (₹)</label>
+                      <input type="number" id="productPrice" placeholder="e.g., 250" required class="w-full border rounded px-4 py-2" />
+                  </div>
+                  <div>
+                      <label for="productStock" class="block font-medium mb-1">Stock Units</label>
+                      <input type="number" id="productStock" placeholder="e.g., 50" required min="1" class="w-full border rounded px-4 py-2" />
+                  </div>
+                  <div>
+                      <label for="productCategory" class="block font-medium mb-1">Category</label>
+                      <select id="productCategory" required class="w-full border rounded px-4 py-2 bg-white">
+                          <option value="Organic">Organic</option>
+                          <option value="Conventional">Conventional</option>
+                      </select>
+                  </div>
+              </div>
+              <div>
+                  <label class="block font-medium mb-1">Product Image</label>
+                  <input type="file" id="productImage" required accept="image/*" class="w-full text-sm" />
+              </div>
+              <button type="submit" class="bg-green-600 px-6 py-2 rounded text-white font-semibold hover:bg-green-700 transition w-full">List Product</button>
+              <p id="addProductMessage" class="mt-4 text-center text-sm font-semibold"></p>
+          </form>
+      </div>
+  </div>
+
+  <div id="raitaModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white w-full max-w-lg p-8 rounded-xl shadow-xl relative max-h-[90vh] overflow-y-auto">
+      <button id="closeRaitaModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+      <h3 class="text-xl font-bold mb-6">Raita Membership Application</h3>
+      <form id="raitaForm" class="space-y-4">
+        <div>
+          <label for="raitaFarmerName" class="block font-medium mb-1">Farmer Name / ರೈತರ ಹೆಸರು</label>
+          <input type="text" id="raitaFarmerName" placeholder="Your full name" required class="w-full border rounded px-4 py-2" />
+        </div>
+        <div>
+          <label for="raitaFarmDetails" class="block font-medium mb-1">Farm Details / ಫಾರ್ಮ್ ವಿವರಗಳು</label>
+          <textarea id="raitaFarmDetails" placeholder="Describe your farm and location" required class="w-full border rounded px-4 py-2"></textarea>
+        </div>
+        <hr/>
+        <div>
+          <label for="raitaQ1" class="block font-medium mb-1">1. What organic methods do you use? / ನೀವು ಯಾವ ಸಾವಯವ ವಿಧಾನಗಳನ್ನು ಬಳಸುತ್ತೀರಿ?</label>
+          <textarea id="raitaQ1" placeholder="e.g., composting, crop rotation / ಉದಾ., ಕಾಂಪೋಸ್ಟಿಂಗ್, ಬೆಳೆ ತಿರುಗುವಿಕೆ" required class="w-full border rounded px-4 py-2"></textarea>
+        </div>
+        <div>
+          <label for="raitaQ2" class="block font-medium mb-1">2. How long have you been practicing organic farming? / ನೀವು ಎಷ್ಟು ಸಮಯದಿಂದ ಸಾವಯವ ಕೃಷಿ ಮಾಡುತ್ತಿದ್ದೀರಿ?</label>
+          <textarea id="raitaQ2" placeholder="e.g., 5 years / ಉದಾ., 5 ವರ್ಷಗಳು" required class="w-full border rounded px-4 py-2"></textarea>
+        </div>
+        <div>
+          <label for="raitaQ3" class="block font-medium mb-1">3. What are the main crops you grow organically? / ನೀವು ಸಾವಯವವಾಗಿ ಬೆಳೆಯುವ ಮುಖ್ಯ ಬೆಳೆಗಳು ಯಾವುವು?</label>
+          <textarea id="raitaQ3" placeholder="e.g., Ragi, Turmeric, Greens / ಉದಾ., ರಾಗಿ, ಅರಿಶಿನ, ಸೊಪ್ಪ" required class="w-full border rounded px-4 py-2"></textarea>
+        </div>
+        <hr/>
+        <div>
+          <label class="block font-medium mb-1">Upload 2 Farm Images / ೨ ಫಾರ್ಮ್ ಚಿತ್ರಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</label>
+          <div class="grid grid-cols-2 gap-4 mt-2">
+            <div>
+              <label for="raitaImage1" class="text-sm">Image 1 / ಚಿತ್ರ ೧</label>
+              <input type="file" id="raitaImage1" required accept="image/*" class="w-full text-sm" />
+            </div>
+            <div>
+              <label for="raitaImage2" class="text-sm">Image 2 / ಚಿತ್ರ ೨</label>
+              <input type="file" id="raitaImage2" required accept="image/*" class="w-full text-sm" />
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Please upload exactly two photos of your organic farm.</p>
+        </div>
+        <button type="submit" class="bg-green-600 px-6 py-2 rounded text-white font-semibold hover:bg-green-700 transition w-full flex items-center justify-center">Submit Application</button>
+        <p id="raitaMessage" class="mt-4 text-center text-sm font-semibold"></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="supplierModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white w-full max-w-2xl p-8 rounded-xl shadow-xl relative max-h-[90vh] overflow-y-auto">
+        <button id="closeSupplierModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+        <h3 class="text-2xl font-bold mb-6 text-green-800">Supplier Application Form</h3>
+        <form id="supplierForm" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="supplierCompanyName" class="block font-medium mb-1">Company Name</label>
+                    <input type="text" id="supplierCompanyName" placeholder="e.g., ABC Organics Pvt. Ltd." required class="w-full border rounded px-4 py-2" />
+                </div>
+                <div>
+                    <label for="supplierContactName" class="block font-medium mb-1">Contact Person</label>
+                    <input type="text" id="supplierContactName" placeholder="Your Full Name" required class="w-full border rounded px-4 py-2" />
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="supplierEmail" class="block font-medium mb-1">Contact Email</label>
+                    <input type="email" id="supplierEmail" placeholder="you@company.com" required class="w-full border rounded px-4 py-2" />
+                </div>
+                <div>
+                    <label for="supplierPhone" class="block font-medium mb-1">Phone Number</label>
+                    <input type="tel" id="supplierPhone" placeholder="10-digit mobile number" required class="w-full border rounded px-4 py-2" />
+                </div>
+            </div>
+            <div>
+                <label for="supplierWebsite" class="block font-medium mb-1">Company Website (Optional)</label>
+                <input type="url" id="supplierWebsite" placeholder="https://your-company.com" class="w-full border rounded px-4 py-2" />
+            </div>
+            <div>
+                <label for="supplierProductDetails" class="block font-medium mb-1">Products You Offer</label>
+                <textarea id="supplierProductDetails" rows="4" placeholder="Briefly describe your main organic products, like organic manures, bio-fertilizers, growth promoters, etc." required class="w-full border rounded px-4 py-2"></textarea>
+            </div>
+            <div>
+                <label class="block font-medium mb-1">Upload Organic Certification</label>
+                <input type="file" id="supplierCertificate" required accept="application/pdf,image/*" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" />
+                <p class="text-xs text-gray-500 mt-1">Please upload your NPOP / Jaivik Bharat certificate (PDF or Image).</p>
+            </div>
+            <button type="submit" class="w-full bg-green-600 px-6 py-3 rounded text-white font-semibold hover:bg-green-700 transition flex items-center justify-center">Submit Application</button>
+            <p id="supplierMessage" class="mt-4 text-center text-sm font-semibold"></p>
+        </form>
+    </div>
+  </div>
+
+  <div id="authModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white shadow-2xl rounded-xl w-full max-w-md p-8 relative">
+      <button id="closeAuthModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+      <div class="flex border-b pb-4 gap-6 mb-6">
+        <button id="loginTab" class="font-semibold border-b-2 border-green-600 text-green-700">Login</button>
+        <button id="signupTab" class="font-semibold text-gray-700">Sign Up</button>
+      </div>
+      <form id="loginForm" class="flex flex-col gap-4">
+        <input type="email" id="loginEmail" placeholder="Email" required class="w-full border rounded px-4 py-2" />
+        <input type="password" id="loginPassword" placeholder="Password" required class="w-full border rounded px-4 py-2" />
+        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700 transition">Login</button>
+      </form>
+      <form id="signupForm" class="flex-col gap-4 hidden">
+        <input type="text" id="signupName" placeholder="Full Name" required class="w-full border rounded px-4 py-2" />
+        <input type="email" id="signupEmail" placeholder="Email" required class="w-full border rounded px-4 py-2" />
+        <input type="password" id="signupPassword" placeholder="Password" required class="w-full border rounded px-4 py-2" />
+        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700 transition mt-2">Create Account</button>
+      </form>
+      <div id="authError" class="text-red-500 pt-3 h-6"></div>
+    </div>
+  </div>
+
+  <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white shadow-2xl rounded-xl w-full max-w-md p-8 relative">
+        <button id="closePaymentModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+        <h3 class="text-2xl font-bold text-green-800 mb-4">Complete Your Payment</h3>
+        <div class="bg-gray-100 p-4 rounded-lg mb-6 text-center">
+            <span class="text-gray-600">Total Amount Due</span>
+            <p id="paymentTotalAmount" class="text-3xl font-bold text-gray-900">₹0.00</p>
+        </div>
+        <form id="paymentForm" class="flex flex-col gap-4">
+            <div class="mb-4">
+                <p class="text-center text-sm text-gray-600 mb-4">Scan the QR code to pay with your UPI app.</p>
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h4 class="font-semibold text-lg text-center mb-3">Scan to Pay</h4>
+                    <div class="flex justify-center">
+                        <img id="upiQrCode" src="https://i.postimg.cc/d1y3sP2x/upi-qr-code.png" alt="UPI QR Code" class="w-48 h-48 border rounded-md" />
+                    </div>
+                </div>
+                <p class="text-xs text-center text-red-600 mt-4 mb-2">
+                    <strong>Important:</strong> After paying, you <strong>must</strong> click the button below to confirm.
+                </p>
+                <button type="submit" id="payNowBtn" class="w-full bg-green-600 text-white py-3 rounded font-semibold hover:bg-green-700 transition flex items-center justify-center">
+                    I Have Paid, Confirm Payment
+                </button>
+            </div>
+        </form>
+        <p id="paymentMessage" class="mt-4 text-center text-sm font-semibold"></p>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    // --- Firebase Config ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyC170ae87yM_79UKSk0LyRdSiu5xW9toFw",
+      authDomain: "jivkisan2.firebaseapp.com",
+      projectId: "jivkisan2",
+      storageBucket: "jivkisan2.appspot.com",
+      messagingSenderId: "692716782617",
+      appId: "1:692716782617:web:556bcd7219c49df3c3d688",
+      measurementId: "G-7FBYEF2K3G",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // --- Element References ---
+    const profileArea = document.getElementById("profileArea");
+    const profileName = document.getElementById("profileName");
+    const showAuthModalBtn = document.getElementById("showAuthModalBtn");
+    const authModal = document.getElementById("authModal");
+    const closeAuthModal = document.getElementById("closeAuthModal");
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+    const authError = document.getElementById("authError");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const applyRaitaBtn = document.getElementById("applyRaitaBtn");
+    const raitaModal = document.getElementById("raitaModal");
+    const closeRaitaModal = document.getElementById("closeRaitaModal");
+    const raitaForm = document.getElementById("raitaForm");
+    const raitaMessage = document.getElementById("raitaMessage");
+    const sellProductBtn = document.getElementById('sellProductBtn');
+    const myCartBtn = document.getElementById('myCartBtn');
+    const addProductModal = document.getElementById('addProductModal');
+    const closeAddProductModal = document.getElementById('closeAddProductModal');
+    const addProductForm = document.getElementById('addProductForm');
+    const addProductMessage = document.getElementById('addProductMessage');
+    const discussionForm = document.getElementById('discussionForm');
+    const newMessage = document.getElementById('newMessage');
+    const discussionMessages = document.getElementById('discussionMessages');
+    const cropSelect = document.getElementById('cropSelect');
+    const predictPriceBtn = document.getElementById('predictPriceBtn');
+    const predictionResult = document.getElementById('predictionResult');
+    const adminPanelBtn = document.getElementById('adminPanelBtn');
+    const showSupplierModalBtn = document.getElementById('showSupplierModalBtn');
+    const supplierModal = document.getElementById('supplierModal');
+    const closeSupplierModal = document.getElementById('closeSupplierModal');
+    const supplierForm = document.getElementById('supplierForm');
+    const supplierMessage = document.getElementById('supplierMessage');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const paymentModal = document.getElementById('paymentModal');
+    const closePaymentModal = document.getElementById('closePaymentModal');
+    const paymentForm = document.getElementById('paymentForm');
+    const payNowBtn = document.getElementById('payNowBtn');
+    const paymentTotalAmount = document.getElementById('paymentTotalAmount');
+    const paymentMessage = document.getElementById('paymentMessage');
+    const allOrdersTableBody = document.getElementById('allOrdersTableBody');
+
+    // --- Modal Logic ---
+    showAuthModalBtn.onclick = () => authModal.classList.remove("hidden");
+    closeAuthModal.onclick = () => { authModal.classList.add("hidden"); authError.textContent = ""; };
+    loginTab.onclick = () => {
+      loginTab.classList.add("border-green-600", "text-green-700"); signupTab.classList.remove("border-green-600", "text-green-700");
+      loginForm.style.display = "flex"; signupForm.style.display = "none"; authError.textContent = "";
+    };
+    signupTab.onclick = () => {
+      signupTab.classList.add("border-green-600", "text-green-700"); loginTab.classList.remove("border-green-600", "text-green-700");
+      signupForm.style.display = "flex"; loginForm.style.display = "none"; authError.textContent = "";
+    };
+    applyRaitaBtn.onclick = () => { raitaForm.reset(); raitaMessage.textContent = ""; raitaModal.classList.remove("hidden"); };
+    closeRaitaModal.onclick = () => { raitaModal.classList.add("hidden"); raitaMessage.textContent = ""; };
+    sellProductBtn.onclick = () => { addProductForm.reset(); addProductMessage.textContent = ''; addProductModal.classList.remove('hidden'); };
+    myCartBtn.onclick = () => window.location.hash = '#my_cart';
+    closeAddProductModal.onclick = () => addProductModal.classList.add('hidden');
+    showSupplierModalBtn.onclick = () => { supplierForm.reset(); supplierMessage.textContent = ''; supplierModal.classList.remove('hidden'); };
+    closeSupplierModal.onclick = () => supplierModal.classList.add('hidden');
+    closePaymentModal.onclick = () => { paymentModal.classList.add('hidden'); paymentMessage.textContent = ''; paymentForm.reset(); };
+
+    // --- Auth Handlers ---
+    loginForm.onsubmit = async (e) => { e.preventDefault(); authError.textContent = ""; try { await auth.signInWithEmailAndPassword(loginEmail.value, loginPassword.value); authModal.classList.add("hidden"); } catch (error) { authError.textContent = error.message; } };
+    signupForm.onsubmit = async (e) => { e.preventDefault(); authError.textContent = ""; try { const userCredential = await auth.createUserWithEmailAndPassword(signupEmail.value, signupPassword.value); await userCredential.user.updateProfile({ displayName: signupName.value }); authModal.classList.add("hidden"); } catch (error) { authError.textContent = error.message; } };
+    logoutBtn?.addEventListener("click", () => auth.signOut());
+
+    // --- Raita Status UI Updater ---
+    function updateRaitaStatusUI(status, message = "") {
+        const raitaNotApprovedContent = document.getElementById('raitaNotApprovedContent');
+        const raitaApprovedContent = document.getElementById('raitaApprovedContent');
+        const raitaStatus = document.getElementById('raitaStatus');
+        const applyRaitaBtn = document.getElementById('applyRaitaBtn');
+        raitaNotApprovedContent.classList.add('hidden'); raitaApprovedContent.classList.add('hidden'); applyRaitaBtn.classList.add('hidden');
+        if (status === 'approved') { 
+            raitaApprovedContent.classList.remove('hidden');
+            renderRaitaDiscussions();
+            populateCropSelector();
+        }
+        else if (status === 'pending') { raitaStatus.textContent = message || "Your application is under review."; raitaNotApprovedContent.classList.remove('hidden'); }
+        else if (status === 'rejected') { raitaStatus.textContent = message || "Your previous application was not approved. You may apply again."; raitaNotApprovedContent.classList.remove('hidden'); applyRaitaBtn.classList.remove('hidden'); }
+        else if (status === 'not_applied') { raitaStatus.textContent = message || "Join our exclusive group for organic farmers."; raitaNotApprovedContent.classList.remove('hidden'); applyRaitaBtn.classList.remove('hidden'); }
+        else if (status === 'logged_out') { raitaStatus.textContent = message || "Please login to apply for Organic Raita membership."; raitaNotApprovedContent.classList.remove('hidden'); }
+        else { raitaStatus.textContent = message || "Could not check application status."; raitaNotApprovedContent.classList.remove('hidden'); }
+    }
+
+    // --- Auth State Change ---
+    auth.onAuthStateChanged(async (user) => {
+      const adminEmail = "harshask274@gmail.com";
+      
+      if (user) {
+        profileArea.style.display = "flex";
+        showAuthModalBtn.style.display = "none";
+        sellProductBtn.classList.remove('hidden');
+        myCartBtn.classList.remove('hidden');
+        profileName.textContent = user.displayName || user.email;
+
+        if (user.email === adminEmail) {
+          adminPanelBtn.classList.remove('hidden');
+        } else {
+          adminPanelBtn.classList.add('hidden');
+        }
+
+        db.collection('supplierApplications')
+          .where('submittedBy', '==', user.uid)
+          .limit(1)
+          .get()
+          .then(snapshot => {
+            if (!snapshot.empty) {
+              const appData = snapshot.docs[0].data();
+              if (appData.status === 'approved' || appData.status === 'pending') {
+                showSupplierModalBtn.classList.add('hidden');
+              } else {
+                showSupplierModalBtn.classList.remove('hidden');
+              }
+            } else {
+              showSupplierModalBtn.classList.remove('hidden');
+            }
+          });
+
+      } else {
+        profileArea.style.display = "none";
+        showAuthModalBtn.style.display = "block";
+        sellProductBtn.classList.add('hidden');
+        myCartBtn.classList.add('hidden');
+        adminPanelBtn.classList.add('hidden');
+        showSupplierModalBtn.classList.add('hidden');
+      }
+
+      try {
+        if (user) {
+          const appSnapshot = await db.collection("raitaApplications").where("userId", "==", user.uid).limit(1).get();
+          updateRaitaStatusUI(appSnapshot.empty ? 'not_applied' : appSnapshot.docs[0].data().status);
+        } else {
+          updateRaitaStatusUI('logged_out');
+        }
+      } catch (e) {
+        console.error("Error checking Raita status: ", e);
+        updateRaitaStatusUI('error', "Error checking your application status.");
+      }
+
+      router();
+    });
+
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    // --- Product Submission ---
+    addProductForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
+        if (!user) { addProductMessage.textContent = "You must be logged in."; addProductMessage.className = "text-red-600"; return; }
+        addProductMessage.textContent = "Processing image..."; addProductMessage.className = "text-blue-600";
+        try {
+            const imageFile = document.getElementById('productImage').files[0];
+            if (!imageFile) { throw new Error("Please select an image."); }
+            const imageUrl = await fileToBase64(imageFile);
+            addProductMessage.textContent = "Saving product...";
+            await db.collection('products').add({
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDescription').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                stock: parseInt(document.getElementById('productStock').value),
+                category: document.getElementById('productCategory').value,
+                imageUrl, sellerId: user.uid, sellerName: user.displayName || user.email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            addProductMessage.textContent = "Product listed!"; addProductMessage.className = "text-green-600";
+            setTimeout(() => addProductModal.classList.add('hidden'), 1500);
+        } catch(error) {
+            addProductMessage.textContent = `Error: ${error.message}`; addProductMessage.className = "text-red-600";
+            console.error("Product listing error: ", error);
+        }
+    };
+    
+    // --- Product & Cart Logic ---
+    async function addToCart(productId, productName, price, imageUrl) {
+        const user = auth.currentUser;
+        if (!user) {
+            authModal.classList.remove("hidden");
+            return;
+        }
+        const cartRef = db.collection('users').doc(user.uid).collection('cart');
+        const itemRef = cartRef.doc(productId);
+        try {
+            const doc = await itemRef.get();
+            if (doc.exists) {
+                await itemRef.update({ quantity: firebase.firestore.FieldValue.increment(1) });
+            } else {
+                await itemRef.set({ productName, price, imageUrl, quantity: 1 });
+            }
+            showToast(`${productName} added to cart!`);
+        } catch (error) {
+            console.error("Error adding to cart: ", error);
+            showToast("Could not add item to cart.", "error");
+        }
+    }
+    
+    ['all-products-grid', 'organic-products-grid'].forEach(gridId => {
+        document.getElementById(gridId).addEventListener('click', (e) => {
+            if (e.target && e.target.matches('.add-to-cart-btn')) {
+                e.preventDefault();
+                const btn = e.target;
+                addToCart(btn.dataset.id, btn.dataset.name, parseFloat(btn.dataset.price), btn.dataset.image);
+            }
+        });
+    });
+    
+    // --- Initial Products Seeding ---
+    async function seedInitialProducts() {
+        const productsCollection = db.collection('products');
+        const snapshot = await productsCollection.limit(1).get();
+        if (!snapshot.empty) return;
+        
+        const initialProducts = [
+            { name: "Arka Microbial Consortium (IIHR)", description: "Govt. Certified Bio-Fertilizer for all crops.", price: 550, category: "Organic", stock: 100, imageUrl: "https://placehold.co/400x300/22c55e/FFFFFF?text=Arka+Consortium" },
+            { name: "N-Fix Gold (Azospirillum) by T.Stanes", description: "A trusted nitrogen-fixing bio-fertilizer.", price: 480, category: "Organic", stock: 85, imageUrl: "https://placehold.co/400x300/1d3557/FFFFFF?text=T.Stanes+N-Fix" },
+            { name: "Vegadooth - Organic Plant Tonic (1L)", description: "Boosts plant growth and improves immunity.", price: 300, category: "Organic", stock: 150, imageUrl: "https://placehold.co/400x300/4c956c/FFFFFF?text=Vegadooth" },
+            { name: "Prathibha Booster - Growth Promoter", description: "Improves overall yield and produce quality.", price: 400, category: "Organic", stock: 60, imageUrl: "https://placehold.co/400x300/e63946/FFFFFF?text=Prathibha+Booster" },
+            { name: "UAS Bio-Phos (PSB Culture)", description: "Phosphate Solubilizing Bacteria from UAS.", price: 250, category: "Organic", stock: 200, imageUrl: "https://placehold.co/400x300/fca311/FFFFFF?text=UAS+Bio-Phos" },
+            { name: "Camson Zeromite (Bio-Acaricide)", description: "Organic solution to control crop mites.", price: 650, category: "Organic", stock: 40, imageUrl: "https://placehold.co/400x300/8a5a44/FFFFFF?text=Camson+Zeromite" },
+        ];
+        for (const product of initialProducts) {
+            await productsCollection.add({ ...product, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        }
+    }
+
+    // --- Search Filters & Real-time Synchronization ---
+    let globalProductsList = [];
+    function renderProducts() {
+        db.collection('products').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            globalProductsList = [];
+            snapshot.forEach(doc => {
+                globalProductsList.push({ id: doc.id, ...doc.data() });
+            });
+            applyFilters();
+        });
+    }
+
+    function applyFilters() {
+        const qAll = document.getElementById('searchAllProducts').value.toLowerCase();
+        const qOrg = document.getElementById('searchOrganicProducts').value.toLowerCase();
+        const allGrid = document.getElementById('all-products-grid');
+        const organicGrid = document.getElementById('organic-products-grid');
+        const user = auth.currentUser;
+
+        allGrid.innerHTML = '';
+        organicGrid.innerHTML = '';
+
+        globalProductsList.forEach(product => {
+            const isOwner = user && user.uid === product.sellerId;
+            const matchesAll = product.name.toLowerCase().includes(qAll);
+            const matchesOrg = product.name.toLowerCase().includes(qOrg);
+
+            const ownerControls = isOwner ? `
+                <div class="mt-4 pt-4 border-t border-gray-100">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Edit Units</label>
+                    <div class="flex gap-2 mt-1">
+                        <input type="number" id="update-stock-${product.id}" value="${product.stock}" class="w-16 border rounded px-2 py-1 text-sm">
+                        <button onclick="updateProductStock('${product.id}')" class="bg-blue-600 text-white text-xs px-2 py-1 rounded hover:bg-blue-700">Set</button>
+                    </div>
+                </div>` : `<p class="text-xs text-gray-500 mt-2">Available: ${product.stock} units</p>`;
+
+            const card = `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                    <img src="${product.imageUrl}" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-800">${product.name}</h3>
+                        <p class="text-xl font-bold">₹${product.price}</p>
+                        <button class="add-to-cart-btn mt-4 w-full ${product.stock <= 0 ? 'bg-gray-300' : 'bg-yellow-400'} py-2 rounded-lg hover:bg-yellow-500 transition"
+                                data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-image="${product.imageUrl}"
+                                ${product.stock <= 0 ? 'disabled' : ''}>
+                            ${product.stock <= 0 ? 'Sold Out' : 'Add to Cart'}
+                        </button>
+                        ${ownerControls}
+                    </div>
+                </div>`;
+
+            if (matchesAll) allGrid.innerHTML += card;
+            if (product.category === 'Organic' && matchesOrg) organicGrid.innerHTML += card;
+        });
+    }
+
+    async function updateProductStock(productId) {
+        const user = auth.currentUser;
+        const newVal = parseInt(document.getElementById(`update-stock-${productId}`).value);
+        if (isNaN(newVal) || newVal < 0) { showToast("Invalid number", "error"); return; }
+        
+        try {
+            const productRef = db.collection('products').doc(productId);
+            const doc = await productRef.get();
+            if (user && doc.exists && doc.data().sellerId !== user.uid) {
+                showToast("Unauthorized entry setup.", "error");
+                return;
+            }
+            await productRef.update({ stock: newVal });
+            showToast("Inventory updated!");
+        } catch (e) {
+            showToast("Update failed: " + e.message, "error");
+        }
+    }
+
+    document.getElementById('searchAllProducts').addEventListener('input', applyFilters);
+    document.getElementById('searchOrganicProducts').addEventListener('input', applyFilters);
+
+    // --- Raita Form Submission ---
+    raitaForm.onsubmit = async function (e) {
+      e.preventDefault();
+      const submitButton = raitaForm.querySelector('button[type="submit"]');
+      const originalButtonHTML = submitButton.innerHTML;
+      raitaMessage.textContent = ""; 
+      const user = auth.currentUser;
+      if (!user) { raitaMessage.textContent = "You must be logged in."; raitaMessage.className = "text-red-600"; return; }
+      
+      const image1 = document.getElementById('raitaImage1').files[0]; 
+      const image2 = document.getElementById('raitaImage2').files[0];
+      const answers = { q1: document.getElementById('raitaQ1').value.trim(), q2: document.getElementById('raitaQ2').value.trim(), q3: document.getElementById('raitaQ3').value.trim() };
+      
+      if (!raitaFarmerName.value.trim() || !raitaFarmDetails.value.trim() || !answers.q1 || !answers.q2 || !answers.q3) { raitaMessage.textContent = "Please fill all fields."; raitaMessage.className = "text-red-600"; return; }
+      if (!image1 || !image2) { raitaMessage.textContent = "Please upload two images."; raitaMessage.className = "text-red-600"; return; }
+      
+      submitButton.disabled = true;
+      submitButton.innerHTML = `Processing...`;
+      raitaMessage.className = "text-blue-600";
+      try {
+          const base64Img1 = await fileToBase64(image1);
+          const base64Img2 = await fileToBase64(image2);
+          const applicationData = { userId: user.uid, email: user.email, farmerName: raitaFarmerName.value.trim(), farmDetails: raitaFarmDetails.value.trim(), answers, images: [base64Img1, base64Img2], status: "pending", submittedAt: firebase.firestore.FieldValue.serverTimestamp() };
+          
+          const existingApp = await db.collection("raitaApplications").where("userId", "==", user.uid).limit(1).get();
+          if (!existingApp.empty) { await db.collection("raitaApplications").doc(existingApp.docs[0].id).update(applicationData); }
+          else { await db.collection("raitaApplications").add(applicationData); }
+
+          raitaMessage.textContent = "Application submitted under administrative cycle review."; 
+          raitaMessage.className = "text-green-600";
+          updateRaitaStatusUI('pending');
+          setTimeout(() => raitaModal.classList.add("hidden"), 3000);
+      } catch (err) { 
+          raitaMessage.textContent = `Error: ${err.message}`; raitaMessage.className = "text-red-600";
+      } finally {
+          submitButton.disabled = false; submitButton.innerHTML = originalButtonHTML;
+      }
+    };
+    
+    // --- Supplier Form Submission ---
+    supplierForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
+        if (!user) return;
+        const submitButton = supplierForm.querySelector('button[type="submit"]');
+        const originalButtonHTML = submitButton.innerHTML;
+
+        try {
+            const existingApp = await db.collection('supplierApplications').where('submittedBy', '==', user.uid).limit(1).get();
+            if (!existingApp.empty) {
+                const currentStatus = existingApp.docs[0].data().status;
+                if (currentStatus === 'pending') { supplierMessage.textContent = "You already have a pending application."; supplierMessage.className = "text-orange-600 font-bold"; return; }
+                else if (currentStatus === 'approved') { supplierMessage.textContent = "Approved validation entry profile."; supplierMessage.className = "text-green-600 font-bold"; return; }
+            }
+
+            submitButton.disabled = true;
+            const certFile = document.getElementById('supplierCertificate').files[0];
+            const certificateB64 = await fileToBase64(certFile);
+
+            const appData = {
+                companyName: document.getElementById('supplierCompanyName').value,
+                contactName: document.getElementById('supplierContactName').value,
+                email: document.getElementById('supplierEmail').value,
+                phone: document.getElementById('supplierPhone').value,
+                website: document.getElementById('supplierWebsite').value,
+                productDetails: document.getElementById('supplierProductDetails').value,
+                certificate: certificateB64,
+                status: 'pending',
+                submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                submittedBy: user.uid,
+            };
+
+            if (!existingApp.empty) { await db.collection('supplierApplications').doc(existingApp.docs[0].id).set(appData); }
+            else { await db.collection('supplierApplications').add(appData); }
+
+            supplierMessage.textContent = "Application submitted successfully!";
+            supplierMessage.className = "text-green-600";
+            setTimeout(() => supplierModal.classList.add('hidden'), 3000);
+        } catch (error) {
+            supplierMessage.textContent = `Error: ${error.message}`; supplierMessage.className = "text-red-600";
+        } finally {
+            submitButton.disabled = false; submitButton.innerHTML = originalButtonHTML;
+        }
+    };
+
+    // --- Raita Discussion Functions ---
+    function renderRaitaDiscussions() {
+        db.collection('raitaDiscussions').orderBy('createdAt', 'asc').onSnapshot(snapshot => {
+            discussionMessages.innerHTML = '';
+            if (snapshot.empty) { discussionMessages.innerHTML = '<p class="text-gray-500 text-center">No messages yet.</p>'; return; }
+            snapshot.forEach(doc => {
+                const message = doc.data();
+                const messageDate = message.createdAt ? message.createdAt.toDate().toLocaleString() : 'Just now';
+                const messageEl = document.createElement('div');
+                messageEl.className = 'p-3 rounded-lg bg-white border';
+                messageEl.innerHTML = `<p class="font-semibold text-green-700 text-sm">${message.userName}</p><p class="text-gray-800 whitespace-pre-wrap">${message.text}</p><p class="text-right text-xs text-gray-400 mt-1">${messageDate}</p>`;
+                discussionMessages.appendChild(messageEl);
+            });
+            discussionMessages.scrollTop = discussionMessages.scrollHeight;
+        });
+    }
+
+    discussionForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
+        const text = newMessage.value.trim();
+        if (text && user) {
+            try {
+                await db.collection('raitaDiscussions').add({ text, userName: user.displayName || user.email, userId: user.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                newMessage.value = '';
+            } catch (error) { showToast("Could not post structural message.", "error"); }
+        }
+    };
+
+    // --- Price Prediction Functions ---
+    function populateCropSelector() {
+        const crops = [...new Set(getMockMandiData().map(item => item.commodity))].sort();
+        cropSelect.innerHTML = crops.map(crop => `<option value="${crop}">${crop}</option>`).join('');
+    }
+
+    predictPriceBtn.onclick = () => {
+        const selectedCrop = cropSelect.value;
+        const relevantCrops = getMockMandiData().filter(d => d.commodity === selectedCrop);
+        predictionResult.innerHTML = `<span class="animate-spin inline-block w-5 h-5 border-2 border-blue-600 rounded-full border-t-transparent"></span>`;
+        setTimeout(() => { 
+            if (relevantCrops.length > 0) {
+                const avgModalPrice = relevantCrops.reduce((acc, c) => acc + parseInt(c.modal_price), 0) / relevantCrops.length;
+                const minPredicted = Math.round(avgModalPrice * 0.85);
+                const maxPredicted = Math.round(avgModalPrice * 1.15);
+                predictionResult.innerHTML = `<p class="font-semibold text-gray-700">Predicted weekly market spread:</p><p class="text-2xl font-bold text-blue-800 mt-1">₹${minPredicted} - ₹${maxPredicted}</p><p class="text-xs text-gray-500">per quintal tracking index</p>`;
+            }
+        }, 1000);
+    };
+
+    // --- Admin Panel Functions ---
+    async function updateRaitaApplicationStatus(docId, newStatus) {
+      try { await db.collection('raitaApplications').doc(docId).update({ status: newStatus }); renderRaitaAdminPanel(); } catch (e) { console.error(e); }
+    }
+    
+    async function updateSupplierApplicationStatus(docId, newStatus) {
+        try {
+            const appRef = db.collection('supplierApplications').doc(docId);
+            await appRef.update({ status: newStatus });
+            const appDoc = await appRef.get();
+            const appData = appDoc.data();
+            const publicSupplierRef = db.collection('publicSuppliers').doc(docId);
+
+            if (newStatus === 'approved') {
+                await publicSupplierRef.set({ companyName: appData.companyName, website: appData.website, productDetails: appData.productDetails, approvedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            } else if (newStatus === 'rejected') {
+                await publicSupplierRef.delete().catch(() => {});
+            }
+            renderSupplierAdminPanel();
+        } catch (e) { console.error(e); }
+    }
+
+    async function renderApprovedSuppliers() {
+        const grid = document.getElementById('approvedSuppliersGrid');
+        const msg = document.getElementById('approvedSuppliersMsg');
+        grid.innerHTML = '';
+        try {
+            const snapshot = await db.collection('publicSuppliers').orderBy('approvedAt', 'desc').get();
+            if (snapshot.empty) { msg.textContent = "No approved private suppliers listed."; return; }
+            msg.textContent = '';
+            snapshot.forEach(doc => {
+                const supplier = doc.data();
+                grid.innerHTML += `<div class="bg-white p-6 rounded-lg shadow-md border border-gray-200"><h4 class="font-bold text-xl text-green-800 mb-2">${supplier.companyName}</h4><p class="text-gray-700 mb-3">${supplier.productDetails}</p>${supplier.website ? `<a href="${supplier.website}" target="_blank" class="text-blue-600 font-semibold hover:underline">Visit Matrix &rarr;</a>` : ''}</div>`;
+            });
+        } catch (e) { msg.textContent = "Error structural tracking."; }
+    }
+
+    async function renderRaitaAdminPanel() {
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = '';
+      try {
+        const snapshot = await db.collection('raitaApplications').orderBy('submittedAt', 'desc').get();
+        if (snapshot.empty) return;
+        snapshot.forEach(doc => {
+          const app = doc.data(); const docId = doc.id; const submittedDate = app.submittedAt ? app.submittedAt.toDate().toLocaleDateString() : 'N/A';
+          const statusClass = app.status === 'approved' ? 'text-green-600' : app.status === 'rejected' ? 'text-red-600' : 'text-yellow-600';
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td class="px-4 py-2 border-b">${submittedDate}</td><td class="px-4 py-2 border-b"><p class="font-semibold">${app.farmerName}</p></td><td class="px-4 py-2 border-b text-xs"><p>${app.farmDetails}</p></td><td class="px-4 py-2 border-b"><a href="${app.images[0]}" target="_blank" class="text-blue-600">Image 1</a></td><td class="px-4 py-2 border-b font-bold ${statusClass}">${app.status}</td><td class="px-4 py-2 border-b">${app.status === 'pending' ? `<button data-id="${docId}" data-status="approved" class="approve-raita-btn bg-green-500 text-white text-xs px-2 py-1 rounded">Approve</button>` : `-`}</td>`;
+          tbody.appendChild(tr);
+        });
+        tbody.querySelectorAll('.approve-raita-btn').forEach(b => b.addEventListener('click', (e) => updateRaitaApplicationStatus(e.target.dataset.id, 'approved')));
+      } catch (e) { console.error(e); }
+    }
+
+    async function renderSupplierAdminPanel() {
+        const tbody = document.getElementById('supplierAdminTableBody');
+        tbody.innerHTML = '';
+        try {
+            const snapshot = await db.collection('supplierApplications').orderBy('submittedAt', 'desc').get();
+            snapshot.forEach(doc => {
+                const app = doc.data();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="px-4 py-2 border-b"><p class="font-semibold">${app.companyName}</p></td><td class="px-4 py-2 border-b">${app.contactName}</td><td class="px-4 py-2 border-b text-xs">${app.productDetails}</td><td class="px-4 py-2 border-b"><a href="${app.certificate}" target="_blank" class="text-blue-600">Cert</a></td><td class="px-4 py-2 border-b">${app.status}</td><td class="px-4 py-2 border-b">${app.status === 'pending' ? `<button data-id="${doc.id}" class="approve-supplier-btn bg-green-500 text-white text-xs px-2 py-1 rounded">Approve</button>` : `-`}</td>`;
+                tbody.appendChild(tr);
+            });
+            tbody.querySelectorAll('.approve-supplier-btn').forEach(b => b.addEventListener('click', (e) => updateSupplierApplicationStatus(e.target.dataset.id, 'approved')));
+        } catch (e) { console.error(e); }
+    }
+
+    async function updateOrderStatus(orderId, newStatus) {
+        try {
+            await db.collection('orders').doc(orderId).update({ status: newStatus });
+            renderAllOrdersAdmin();
+            showToast(`Order processed status layout update confirmation.`);
+        } catch (error) { console.error(error); }
+    }
+
+    async function renderAllOrdersAdmin() {
+        allOrdersTableBody.innerHTML = '';
+        try {
+            db.collection('orders').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                snapshot.forEach(doc => {
+                    const order = doc.data();
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td class="px-4 py-2 border-b text-xs">${doc.id.substring(0,6)}</td><td class="px-4 py-2 border-b">${order.userName}</td><td class="px-4 py-2 border-b font-bold">₹${order.total}</td><td class="px-4 py-2 border-b">${order.status}</td><td class="px-4 py-2 border-b"><button data-id="${doc.id}" class="approve-payment-btn bg-green-500 text-white text-xs px-2 py-1 rounded">Clear</button></td>`;
+                    allOrdersTableBody.appendChild(tr);
+                });
+                allOrdersTableBody.querySelectorAll('.approve-payment-btn').forEach(b => b.addEventListener('click', e => updateOrderStatus(e.target.dataset.id, 'Placed')));
+            });
+        } catch (e) { console.error(e); }
+    }
+
+    // --- NEW: Render Forward Pricing Contracts Data ---
+    async function renderForwardContracts() {
+        const grid = document.getElementById('activeContractsGrid');
+        grid.innerHTML = '<p class="text-gray-500">Loading collective agreements...</p>';
+        try {
+            const snapshot = await db.collection('forwardContracts').get();
+            if (snapshot.empty) { grid.innerHTML = '<p class="text-gray-500 col-span-3">No collective bargaining commitments configured for this agricultural window cycle.</p>'; return; }
+            grid.innerHTML = '';
+            snapshot.forEach(doc => {
+                const contract = doc.data();
+                grid.innerHTML += `
+                    <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-600">
+                        <span class="text-xs font-bold uppercase text-gray-400">ID Reference: ${doc.id.substring(0,8)}</span>
+                        <h4 class="font-bold text-xl text-green-900 mt-1">${contract.cropDetails.commodity}</h4>
+                        <p class="text-sm text-gray-600"><b>FPO Federation:</b> ${contract.fpoId}</p>
+                        <div class="my-3 p-3 bg-gray-50 rounded text-sm">
+                            <p><b>Target Pool Vol:</b> ${contract.cropDetails.expectedQuantityQuintals} Quintals</p>
+                            <p class="text-green-700 font-bold text-lg mt-1">Contract Floor: ₹${contract.cropDetails.agreedPricePerQuintal}/Qtl</p>
+                        </div>
+                        <p class="text-xs font-semibold px-2 py-1 inline-block bg-yellow-100 text-yellow-800 rounded-full">${contract.escrowStatus}</p>
+                    </div>`;
+            });
+        } catch (e) { console.error(e); }
+    }
+
+    // --- NEW: Render P2P Irrigation / Water Registry Assets ---
+    async function renderSharedResources() {
+        const grid = document.getElementById('sharedResourcesGrid');
+        grid.innerHTML = '<p class="text-gray-500">Scanning community resource allocation maps...</p>';
+        try {
+            const snapshot = await db.collection('resourceSharing').where('status', '==', 'active').get();
+            if (snapshot.empty) { grid.innerHTML = '<p class="text-gray-500 col-span-3">No community water leases or irrigation units currently deployed.</p>'; return; }
+            grid.innerHTML = '';
+            snapshot.forEach(doc => {
+                const res = doc.data();
+                grid.innerHTML += `
+                    <div class="bg-white p-6 rounded-lg shadow border border-blue-200">
+                        <h4 class="font-bold text-xl text-blue-900">${res.resourceType}</h4>
+                        <p class="text-sm text-gray-500">Village Cluster Zone: <b>${res.villageCluster}</b></p>
+                        <div class="mt-4 flex justify-between items-center border-t pt-4">
+                            <div>
+                                <p class="text-xs text-gray-400">Available capacity</p>
+                                <p class="font-semibold text-gray-800">${res.availabilityPerDayHours} Hours / Day</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-blue-700">₹${res.ratePerHourINR}<span class="text-xs text-gray-500">/hr</span></p>
+                            </div>
+                        </div>
+                        <button class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm font-semibold transition">Request Irrigation Lease</button>
+                    </div>`;
+            });
+        } catch (e) { console.error(e); }
+    }
+
+    // --- CART AND ORDER FUNCTIONS ---
+    async function renderCart() {
+        const user = auth.currentUser; if (!user) return;
+        const cartContainer = document.getElementById('cartItemsContainer');
+        db.collection('users').doc(user.uid).collection('cart').onSnapshot(snapshot => {
+            if (snapshot.empty) { cartContainer.innerHTML = '<p class="text-center text-gray-500">Your cart is empty.</p>'; updateCartSummary([]); return; }
+            cartContainer.innerHTML = ''; const cartItems = [];
+            snapshot.forEach(doc => {
+                const item = { id: doc.id, ...doc.data() }; cartItems.push(item);
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex items-center gap-4 bg-white p-4 rounded-lg shadow border';
+                itemEl.innerHTML = `<img src="${item.imageUrl}" class="w-20 h-20 object-cover rounded-md"><div class="flex-grow"><h4 class="font-semibold">${item.productName}</h4><p class="text-gray-700 font-bold">₹${item.price}</p></div><div class="flex items-center gap-2"><button class="update-qty-btn p-1 border rounded" data-id="${item.id}" data-change="-1">-</button><span>${item.quantity}</span><button class="update-qty-btn p-1 border rounded" data-id="${item.id}" data-change="1">+</button></div><p class="font-semibold w-20 text-right">₹${item.price * item.quantity}</p><button class="remove-item-btn text-red-500 font-bold text-xl" data-id="${item.id}">&times;</button>`;
+                cartContainer.appendChild(itemEl);
+            });
+            updateCartSummary(cartItems);
+        });
+    }
+
+    function updateCartSummary(items) {
+        const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        document.getElementById('cartSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+        document.getElementById('cartTotal').textContent = `₹${subtotal.toFixed(2)}`;
+        checkoutBtn.disabled = items.length === 0;
+    }
+    
+    document.getElementById('cartItemsContainer').addEventListener('click', async (e) => {
+        const user = auth.currentUser; if (!user) return;
+        const cartRef = db.collection('users').doc(user.uid).collection('cart');
+        const itemId = e.target.dataset.id;
+        if (e.target.matches('.update-qty-btn')) {
+            const change = parseInt(e.target.dataset.change, 10);
+            const itemRef = cartRef.doc(itemId); const doc = await itemRef.get();
+            if (doc.exists && (doc.data().quantity + change > 0)) { await itemRef.update({ quantity: firebase.firestore.FieldValue.increment(change) }); }
+            else { await itemRef.delete(); }
+        }
+        if (e.target.matches('.remove-item-btn')) { await cartRef.doc(itemId).delete(); }
+    });
+
+    checkoutBtn.addEventListener('click', () => {
+        if (!auth.currentUser) { authModal.classList.remove("hidden"); return; }
+        paymentTotalAmount.textContent = document.getElementById('cartTotal').textContent;
+        paymentModal.classList.remove('hidden');
+    });
+
+    paymentForm.onsubmit = async (e) => {
+        e.preventDefault(); const user = auth.currentUser; if (!user) return;
+        payNowBtn.disabled = true; paymentMessage.textContent = "Verifying submission transaction packets...";
+        try {
+            const cartRef = db.collection('users').doc(user.uid).collection('cart');
+            const cartSnapshot = await cartRef.get();
+            const items = []; let total = 0;
+            cartSnapshot.forEach(doc => { const d = doc.data(); items.push(d); total += d.price * d.quantity; });
+
+            await db.collection('orders').add({ userId: user.uid, userName: user.displayName || user.email, items, total, status: 'Pending Payment Confirmation', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            const batch = db.batch(); cartSnapshot.docs.forEach(doc => batch.delete(doc.ref)); await batch.commit();
+
+            paymentMessage.textContent = "Order submitted successfully for clearance validation ledger profiling.";
+            setTimeout(() => { paymentModal.classList.add('hidden'); window.location.hash = '#my_orders'; }, 2000);
+        } catch (error) { payNowBtn.disabled = false; }
+    };
+
+    async function renderOrders() {
+        const user = auth.currentUser; if (!user) return;
+        const container = document.getElementById('ordersContainer');
+        db.collection('orders').where('userId', '==', user.uid).orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            if (snapshot.empty) { container.innerHTML = '<p class="text-center text-gray-500">No transactions recorded.</p>'; return; }
+            container.innerHTML = '';
+            snapshot.forEach(doc => {
+                const o = doc.data();
+                const div = document.createElement('div'); div.className = 'bg-white p-6 rounded-lg shadow border mb-4';
+                div.innerHTML = `<div class="flex justify-between border-b pb-2"><div><p class="font-bold text-green-800">TX ID: ${doc.id}</p></div><div><p class="font-semibold">Total: ₹${o.total}</p><p class="text-xs uppercase">${o.status}</p></div></div>`;
+                container.appendChild(div);
+            });
+        });
+    }
+
+    // --- Router Switch Configuration ---
+    function router() {
+      const hash = window.location.hash || "#home";
+      document.querySelectorAll('main > div').forEach(page => page.classList.add('hidden'));
+      const pageIdMap = { 
+          "#organic_raita": "organicRaitaPage", 
+          "#admin": "adminPanelPage", 
+          "#all_products": "allProductsPage", 
+          "#organic_products": "organicProductsPage", 
+          "#suppliers": "suppliersPage", 
+          "#home": "homePage",
+          "#my_cart": "myCartPage",
+          "#my_orders": "myOrdersPage",
+          "#fpo_hub": "fpoHubPage",
+          "#p2p_resources": "resourceSharingPage"
+      };
+      const pageId = pageIdMap[hash] || "homePage";
+      const currentPage = document.getElementById(pageId);
+      if(currentPage) currentPage.classList.remove("hidden");
+
+      if (hash === "#admin") {
+        renderRaitaAdminPanel(); renderSupplierAdminPanel(); renderAllOrdersAdmin();
+      } else if (hash === '#my_cart') {
+          renderCart();
+      } else if (hash === '#my_orders') {
+          renderOrders();
+      } else if (hash === '#suppliers') {
+          renderApprovedSuppliers();
+      } else if (hash === '#fpo_hub') {
+          renderForwardContracts();
+      } else if (hash === '#p2p_resources') {
+          renderSharedResources();
+      }
+    }
+    window.addEventListener("hashchange", router);
+    window.addEventListener("load", () => { seedInitialProducts(); renderLiveMandiTable(); renderProducts(); router(); });
+
+    function getMockMandiData(){const a=new Date,b=new Date;b.setDate(a.getDate()-1);const d=b=>`${b.getDate().toString().padStart(2,"0")}/${(b.getMonth()+1).toString().padStart(2,"0")}/${b.getFullYear()}`;return[{commodity:"Tomato",arrival_date:d(a),market:"Bengaluru",min_price:"1250",max_price:"1500",modal_price:"1400"},{commodity:"Onion",arrival_date:d(a),market:"Mysuru",min_price:"2100",max_price:"2500",modal_price:"2300"},{commodity:"Maize",arrival_date:d(a),market:"Belagavi",min_price:"1900",max_price:"2100",modal_price:"2000"},{commodity:"Turmeric",arrival_date:d(b),market:"Chamarajanagar",min_price:"7500",max_price:"8200",modal_price:"7800"}]}
+  </script>
+</body>
+</html>
